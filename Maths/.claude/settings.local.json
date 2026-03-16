@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcodebuild -project MathBrainBooster.xcodeproj -scheme MathBrainBooster -destination 'platform=iOS Simulator,name=iPhone 16' -quiet build)",
+      "Bash(xcodebuild -project MathBrainBooster.xcodeproj -scheme MathBrainBooster -destination 'platform=iOS Simulator,id=AE81FAAD-0CF1-440F-8371-5B9CEA58C982' build)",
+      "Bash(xcodebuild -project /Users/saturngames/Documents/Projects/xCode/Maths/MathBrainBooster.xcodeproj -scheme MathBrainBooster -destination 'platform=iOS Simulator,id=AE81FAAD-0CF1-440F-8371-5B9CEA58C982' build)"
+    ]
+  }
+}

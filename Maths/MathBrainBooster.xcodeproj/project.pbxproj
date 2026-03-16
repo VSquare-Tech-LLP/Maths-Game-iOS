@@ -1,0 +1,557 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000001 /* MathBrainBoosterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000001 /* MathBrainBoosterApp.swift */; };
+		A10000002 /* GameMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000002 /* GameMode.swift */; };
+		A10000003 /* Difficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000003 /* Difficulty.swift */; };
+		A10000004 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000004 /* Question.swift */; };
+		A10000005 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000005 /* GameState.swift */; };
+		A10000006 /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000006 /* Achievement.swift */; };
+		A10000007 /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000007 /* ColorTheme.swift */; };
+		A10000008 /* GameResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000008 /* GameResult.swift */; };
+		A10000009 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000009 /* GameViewModel.swift */; };
+		A10000010 /* StatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010 /* StatsViewModel.swift */; };
+		A10000011 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000011 /* SettingsViewModel.swift */; };
+		A10000012 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000012 /* HomeView.swift */; };
+		A10000013 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000013 /* GameView.swift */; };
+		A10000014 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000014 /* StatsView.swift */; };
+		A10000015 /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000015 /* AchievementsView.swift */; };
+		A10000016 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000016 /* SettingsView.swift */; };
+		A10000017 /* TimerRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000017 /* TimerRingView.swift */; };
+		A10000018 /* AnswerButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000018 /* AnswerButtonView.swift */; };
+		A10000019 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000019 /* GameOverView.swift */; };
+		A10000020 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000020 /* SoundManager.swift */; };
+		A10000021 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000021 /* HapticManager.swift */; };
+		A10000022 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000022 /* GameCenterManager.swift */; };
+		A10000023 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000023 /* Assets.xcassets */; };
+		A10000024 /* AchievementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000024 /* AchievementManager.swift */; };
+		A10000025 /* StreakBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000025 /* StreakBadgeView.swift */; };
+		A10000026 /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000026 /* BarChartView.swift */; };
+		A10000027 /* DifficultySelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000027 /* DifficultySelectView.swift */; };
+		A10000028 /* DailyChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000028 /* DailyChallenge.swift */; };
+		A10000029 /* DailyChallengeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000029 /* DailyChallengeViewModel.swift */; };
+		A10000030 /* DailyChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000030 /* DailyChallengeView.swift */; };
+		A10000031 /* TugOfWarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000031 /* TugOfWarViewModel.swift */; };
+		A10000032 /* TugOfWarGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000032 /* TugOfWarGameView.swift */; };
+		A10000033 /* MistakeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000033 /* MistakeItem.swift */; };
+		A10000034 /* MistakesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000034 /* MistakesManager.swift */; };
+		A10000035 /* MistakesWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000035 /* MistakesWorkoutView.swift */; };
+		A10000036 /* QuickMathsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000036 /* QuickMathsViewModel.swift */; };
+		A10000037 /* QuickMathsSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000037 /* QuickMathsSetupView.swift */; };
+		A10000038 /* QuickMathsGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000038 /* QuickMathsGameView.swift */; };
+		A10000039 /* MiniGamesHubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000039 /* MiniGamesHubView.swift */; };
+		A10000040 /* SudokuGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000040 /* SudokuGameView.swift */; };
+		A10000041 /* Game2048View.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000041 /* Game2048View.swift */; };
+		A10000042 /* NumberMemoryGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000042 /* NumberMemoryGameView.swift */; };
+		A10000043 /* MathPairsGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000043 /* MathPairsGameView.swift */; };
+		A10000044 /* NumberSequenceGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000044 /* NumberSequenceGameView.swift */; };
+		A10000045 /* MagicSquareGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000045 /* MagicSquareGameView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A20000001 /* MathBrainBoosterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathBrainBoosterApp.swift; sourceTree = "<group>"; };
+		A20000002 /* GameMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMode.swift; sourceTree = "<group>"; };
+		A20000003 /* Difficulty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Difficulty.swift; sourceTree = "<group>"; };
+		A20000004 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		A20000005 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		A20000006 /* Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Achievement.swift; sourceTree = "<group>"; };
+		A20000007 /* ColorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
+		A20000008 /* GameResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameResult.swift; sourceTree = "<group>"; };
+		A20000009 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
+		A20000010 /* StatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewModel.swift; sourceTree = "<group>"; };
+		A20000011 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		A20000012 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A20000013 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		A20000014 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		A20000015 /* AchievementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementsView.swift; sourceTree = "<group>"; };
+		A20000016 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A20000017 /* TimerRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRingView.swift; sourceTree = "<group>"; };
+		A20000018 /* AnswerButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerButtonView.swift; sourceTree = "<group>"; };
+		A20000019 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
+		A20000020 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
+		A20000021 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		A20000022 /* GameCenterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterManager.swift; sourceTree = "<group>"; };
+		A20000023 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A20000024 /* AchievementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementManager.swift; sourceTree = "<group>"; };
+		A20000025 /* StreakBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakBadgeView.swift; sourceTree = "<group>"; };
+		A20000026 /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
+		A20000027 /* DifficultySelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultySelectView.swift; sourceTree = "<group>"; };
+		A20000028 /* DailyChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyChallenge.swift; sourceTree = "<group>"; };
+		A20000029 /* DailyChallengeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyChallengeViewModel.swift; sourceTree = "<group>"; };
+		A20000030 /* DailyChallengeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyChallengeView.swift; sourceTree = "<group>"; };
+		A20000031 /* TugOfWarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TugOfWarViewModel.swift; sourceTree = "<group>"; };
+		A20000032 /* TugOfWarGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TugOfWarGameView.swift; sourceTree = "<group>"; };
+		A20000033 /* MistakeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MistakeItem.swift; sourceTree = "<group>"; };
+		A20000034 /* MistakesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MistakesManager.swift; sourceTree = "<group>"; };
+		A20000035 /* MistakesWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MistakesWorkoutView.swift; sourceTree = "<group>"; };
+		A20000036 /* QuickMathsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickMathsViewModel.swift; sourceTree = "<group>"; };
+		A20000037 /* QuickMathsSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickMathsSetupView.swift; sourceTree = "<group>"; };
+		A20000038 /* QuickMathsGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickMathsGameView.swift; sourceTree = "<group>"; };
+		A20000039 /* MiniGamesHubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniGamesHubView.swift; sourceTree = "<group>"; };
+		A20000040 /* SudokuGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuGameView.swift; sourceTree = "<group>"; };
+		A20000041 /* Game2048View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game2048View.swift; sourceTree = "<group>"; };
+		A20000042 /* NumberMemoryGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberMemoryGameView.swift; sourceTree = "<group>"; };
+		A20000043 /* MathPairsGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPairsGameView.swift; sourceTree = "<group>"; };
+		A20000044 /* NumberSequenceGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberSequenceGameView.swift; sourceTree = "<group>"; };
+		A20000045 /* MagicSquareGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicSquareGameView.swift; sourceTree = "<group>"; };
+		A30000001 /* MathBrainBooster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathBrainBooster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A40000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A50000001 = {
+			isa = PBXGroup;
+			children = (
+				A50000002 /* MathBrainBooster */,
+				A50000009 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A50000002 /* MathBrainBooster */ = {
+			isa = PBXGroup;
+			children = (
+				A20000001 /* MathBrainBoosterApp.swift */,
+				A50000003 /* Models */,
+				A50000004 /* ViewModels */,
+				A50000005 /* Views */,
+				A50000008 /* Services */,
+				A20000023 /* Assets.xcassets */,
+			);
+			path = MathBrainBooster;
+			sourceTree = "<group>";
+		};
+		A50000003 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A20000002 /* GameMode.swift */,
+				A20000003 /* Difficulty.swift */,
+				A20000004 /* Question.swift */,
+				A20000005 /* GameState.swift */,
+				A20000006 /* Achievement.swift */,
+				A20000007 /* ColorTheme.swift */,
+				A20000008 /* GameResult.swift */,
+				A20000028 /* DailyChallenge.swift */,
+				A20000033 /* MistakeItem.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A50000004 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A20000009 /* GameViewModel.swift */,
+				A20000010 /* StatsViewModel.swift */,
+				A20000011 /* SettingsViewModel.swift */,
+				A20000029 /* DailyChallengeViewModel.swift */,
+				A20000031 /* TugOfWarViewModel.swift */,
+				A20000036 /* QuickMathsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A50000005 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A50000006 /* Screens */,
+				A50000007 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A50000006 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				A20000012 /* HomeView.swift */,
+				A20000013 /* GameView.swift */,
+				A20000014 /* StatsView.swift */,
+				A20000015 /* AchievementsView.swift */,
+				A20000016 /* SettingsView.swift */,
+				A20000019 /* GameOverView.swift */,
+				A20000027 /* DifficultySelectView.swift */,
+				A20000030 /* DailyChallengeView.swift */,
+				A20000032 /* TugOfWarGameView.swift */,
+				A20000035 /* MistakesWorkoutView.swift */,
+				A20000037 /* QuickMathsSetupView.swift */,
+				A20000038 /* QuickMathsGameView.swift */,
+				A20000039 /* MiniGamesHubView.swift */,
+				A20000040 /* SudokuGameView.swift */,
+				A20000041 /* Game2048View.swift */,
+				A20000042 /* NumberMemoryGameView.swift */,
+				A20000043 /* MathPairsGameView.swift */,
+				A20000044 /* NumberSequenceGameView.swift */,
+				A20000045 /* MagicSquareGameView.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		A50000007 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A20000017 /* TimerRingView.swift */,
+				A20000018 /* AnswerButtonView.swift */,
+				A20000025 /* StreakBadgeView.swift */,
+				A20000026 /* BarChartView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A50000008 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A20000020 /* SoundManager.swift */,
+				A20000021 /* HapticManager.swift */,
+				A20000022 /* GameCenterManager.swift */,
+				A20000024 /* AchievementManager.swift */,
+				A20000034 /* MistakesManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A50000009 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A30000001 /* MathBrainBooster.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A60000001 /* MathBrainBooster */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A80000003 /* Build configuration list for PBXNativeTarget "MathBrainBooster" */;
+			buildPhases = (
+				A70000001 /* Sources */,
+				A40000001 /* Frameworks */,
+				A70000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MathBrainBooster;
+			productName = MathBrainBooster;
+			productReference = A30000001 /* MathBrainBooster.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A60000002 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					A60000001 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = A80000001 /* Build configuration list for PBXProject "MathBrainBooster" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A50000001;
+			productRefGroup = A50000009 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A60000001 /* MathBrainBooster */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A70000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000023 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A70000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000001 /* MathBrainBoosterApp.swift in Sources */,
+				A10000002 /* GameMode.swift in Sources */,
+				A10000003 /* Difficulty.swift in Sources */,
+				A10000004 /* Question.swift in Sources */,
+				A10000005 /* GameState.swift in Sources */,
+				A10000006 /* Achievement.swift in Sources */,
+				A10000007 /* ColorTheme.swift in Sources */,
+				A10000008 /* GameResult.swift in Sources */,
+				A10000009 /* GameViewModel.swift in Sources */,
+				A10000010 /* StatsViewModel.swift in Sources */,
+				A10000011 /* SettingsViewModel.swift in Sources */,
+				A10000012 /* HomeView.swift in Sources */,
+				A10000013 /* GameView.swift in Sources */,
+				A10000014 /* StatsView.swift in Sources */,
+				A10000015 /* AchievementsView.swift in Sources */,
+				A10000016 /* SettingsView.swift in Sources */,
+				A10000017 /* TimerRingView.swift in Sources */,
+				A10000018 /* AnswerButtonView.swift in Sources */,
+				A10000019 /* GameOverView.swift in Sources */,
+				A10000020 /* SoundManager.swift in Sources */,
+				A10000021 /* HapticManager.swift in Sources */,
+				A10000022 /* GameCenterManager.swift in Sources */,
+				A10000024 /* AchievementManager.swift in Sources */,
+				A10000025 /* StreakBadgeView.swift in Sources */,
+				A10000026 /* BarChartView.swift in Sources */,
+				A10000027 /* DifficultySelectView.swift in Sources */,
+				A10000028 /* DailyChallenge.swift in Sources */,
+				A10000029 /* DailyChallengeViewModel.swift in Sources */,
+				A10000030 /* DailyChallengeView.swift in Sources */,
+				A10000031 /* TugOfWarViewModel.swift in Sources */,
+				A10000032 /* TugOfWarGameView.swift in Sources */,
+				A10000033 /* MistakeItem.swift in Sources */,
+				A10000034 /* MistakesManager.swift in Sources */,
+				A10000035 /* MistakesWorkoutView.swift in Sources */,
+				A10000036 /* QuickMathsViewModel.swift in Sources */,
+				A10000037 /* QuickMathsSetupView.swift in Sources */,
+				A10000038 /* QuickMathsGameView.swift in Sources */,
+				A10000039 /* MiniGamesHubView.swift in Sources */,
+				A10000040 /* SudokuGameView.swift in Sources */,
+				A10000041 /* Game2048View.swift in Sources */,
+				A10000042 /* NumberMemoryGameView.swift in Sources */,
+				A10000043 /* MathPairsGameView.swift in Sources */,
+				A10000044 /* NumberSequenceGameView.swift in Sources */,
+				A10000045 /* MagicSquareGameView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A80000004 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A80000005 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A80000006 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = NSH747W3MA;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Math Brain Booster";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.saturngames.MathBrainBooster;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A80000007 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = NSH747W3MA;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Math Brain Booster";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.saturngames.MathBrainBooster;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A80000001 /* Build configuration list for PBXProject "MathBrainBooster" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A80000004 /* Debug */,
+				A80000005 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A80000003 /* Build configuration list for PBXNativeTarget "MathBrainBooster" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A80000006 /* Debug */,
+				A80000007 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A60000002 /* Project object */;
+}
