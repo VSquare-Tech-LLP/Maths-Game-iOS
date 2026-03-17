@@ -52,6 +52,8 @@
 		A10000043 /* MathPairsGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000043 /* MathPairsGameView.swift */; };
 		A10000044 /* NumberSequenceGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000044 /* NumberSequenceGameView.swift */; };
 		A10000045 /* MagicSquareGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000045 /* MagicSquareGameView.swift */; };
+		A10000046 /* MergeNumberGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000046 /* MergeNumberGameView.swift */; };
+		A10000047 /* DropNumberGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000047 /* DropNumberGameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +102,8 @@
 		A20000043 /* MathPairsGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathPairsGameView.swift; sourceTree = "<group>"; };
 		A20000044 /* NumberSequenceGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberSequenceGameView.swift; sourceTree = "<group>"; };
 		A20000045 /* MagicSquareGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicSquareGameView.swift; sourceTree = "<group>"; };
+		A20000046 /* MergeNumberGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergeNumberGameView.swift; sourceTree = "<group>"; };
+		A20000047 /* DropNumberGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropNumberGameView.swift; sourceTree = "<group>"; };
 		A30000001 /* MathBrainBooster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathBrainBooster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -195,6 +199,8 @@
 				A20000043 /* MathPairsGameView.swift */,
 				A20000044 /* NumberSequenceGameView.swift */,
 				A20000045 /* MagicSquareGameView.swift */,
+				A20000046 /* MergeNumberGameView.swift */,
+				A20000047 /* DropNumberGameView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -343,6 +349,8 @@
 				A10000043 /* MathPairsGameView.swift in Sources */,
 				A10000044 /* NumberSequenceGameView.swift in Sources */,
 				A10000045 /* MagicSquareGameView.swift in Sources */,
+				A10000046 /* MergeNumberGameView.swift in Sources */,
+				A10000047 /* DropNumberGameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

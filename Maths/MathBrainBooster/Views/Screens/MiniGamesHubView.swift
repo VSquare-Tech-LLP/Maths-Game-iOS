@@ -23,6 +23,8 @@ struct MiniGamesHubView: View {
         MiniGameItem(title: "Math Pairs", subtitle: "Match equations & answers", icon: "rectangle.on.rectangle", colors: [.green, .mint]),
         MiniGameItem(title: "Number Sequence", subtitle: "Find the pattern", icon: "chart.line.uptrend.xyaxis", colors: [.cyan, .blue]),
         MiniGameItem(title: "Magic Square", subtitle: "Fill the grid", icon: "square.grid.3x3.topleft.filled", colors: [.red, .orange]),
+        MiniGameItem(title: "Merge Numbers", subtitle: "Drop & merge balls", icon: "circle.circle.fill", colors: [.orange, .brown]),
+        MiniGameItem(title: "Drop & Merge", subtitle: "Reach number 30!", icon: "square.stack.3d.down.forward.fill", colors: [.yellow, .green]),
     ]
 
     var body: some View {
@@ -162,6 +164,8 @@ struct MiniGamesHubView: View {
         case "Math Pairs":      MathPairsGameView()
         case "Number Sequence": NumberSequenceGameView()
         case "Magic Square":    MagicSquareGameView()
+        case "Merge Numbers":   MergeNumberGameView()
+        case "Drop & Merge":    DropNumberGameView()
         default:                EmptyView()
         }
     }

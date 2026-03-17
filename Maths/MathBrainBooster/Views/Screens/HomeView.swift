@@ -146,6 +146,7 @@ struct HomeView: View {
                             )
                         )
                         .frame(width: 50, height: 50)
+                        .shadow(color: Color.red.opacity(0.3), radius: 6, y: 2)
 
                     Image(systemName: "calendar.badge.clock")
                         .font(.system(size: 22, weight: .semibold))
@@ -182,8 +183,8 @@ struct HomeView: View {
                     Text("PLAY")
                         .font(.system(size: 13, weight: .heavy, design: .rounded))
                         .foregroundColor(.white)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 7)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
                         .background(
                             LinearGradient(
                                 colors: [Color.orange, Color.red],
@@ -192,6 +193,7 @@ struct HomeView: View {
                             )
                         )
                         .cornerRadius(10)
+                        .shadow(color: Color.red.opacity(0.3), radius: 4, y: 2)
                 } else {
                     Image(systemName: "chevron.right")
                         .font(.system(size: 14, weight: .semibold))
@@ -232,6 +234,7 @@ struct HomeView: View {
                             )
                         )
                         .frame(width: 50, height: 50)
+                        .shadow(color: Color.blue.opacity(0.3), radius: 6, y: 2)
 
                     Image(systemName: "bolt.fill")
                         .font(.system(size: 22, weight: .semibold))
@@ -253,8 +256,8 @@ struct HomeView: View {
                 Text("GO")
                     .font(.system(size: 13, weight: .heavy, design: .rounded))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 7)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
                     .background(
                         LinearGradient(
                             colors: [Color.cyan, Color.blue],
@@ -263,6 +266,7 @@ struct HomeView: View {
                         )
                     )
                     .cornerRadius(10)
+                    .shadow(color: Color.blue.opacity(0.3), radius: 4, y: 2)
             }
             .padding(14)
             .background(theme.cardBackground)
@@ -292,12 +296,13 @@ struct HomeView: View {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [Color.yellow, Color.orange],
+                                colors: [Color.orange, Color(red: 0.90, green: 0.50, blue: 0.15)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
                         .frame(width: 50, height: 50)
+                        .shadow(color: Color.orange.opacity(0.3), radius: 6, y: 2)
 
                     Image(systemName: "gamecontroller.fill")
                         .font(.system(size: 22, weight: .semibold))
@@ -318,17 +323,18 @@ struct HomeView: View {
 
                 Text("PLAY")
                     .font(.system(size: 13, weight: .heavy, design: .rounded))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 7)
+                    .foregroundColor(Color(red: 0.45, green: 0.22, blue: 0.0))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
                     .background(
                         LinearGradient(
-                            colors: [Color.yellow, Color.orange],
-                            startPoint: .leading,
-                            endPoint: .trailing
+                            colors: [Color(red: 1.0, green: 0.85, blue: 0.30), Color.orange],
+                            startPoint: .top,
+                            endPoint: .bottom
                         )
                     )
                     .cornerRadius(10)
+                    .shadow(color: Color.orange.opacity(0.3), radius: 4, y: 2)
             }
             .padding(14)
             .background(theme.cardBackground)
@@ -337,7 +343,7 @@ struct HomeView: View {
                 RoundedRectangle(cornerRadius: 18)
                     .stroke(
                         LinearGradient(
-                            colors: [Color.yellow.opacity(0.4), Color.orange.opacity(0.2)],
+                            colors: [Color.orange.opacity(0.4), Color.orange.opacity(0.15)],
                             startPoint: .leading,
                             endPoint: .trailing
                         ),
@@ -364,6 +370,7 @@ struct HomeView: View {
                             )
                         )
                         .frame(width: 50, height: 50)
+                        .shadow(color: Color.pink.opacity(0.3), radius: 6, y: 2)
 
                     Image(systemName: "pencil.and.outline")
                         .font(.system(size: 22, weight: .semibold))
@@ -423,9 +430,13 @@ struct HomeView: View {
             Divider().frame(height: 30).background(theme.textSecondary.opacity(0.3))
             QuickStat(title: "Best Streak", value: "\(statsVM.allTimeBestStreak)", theme: theme)
         }
-        .padding(.vertical, 12)
+        .padding(.vertical, 14)
         .background(theme.cardBackground)
         .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(theme.textSecondary.opacity(0.1), lineWidth: 1)
+        )
     }
 
     private var achievementBanner: some View {
