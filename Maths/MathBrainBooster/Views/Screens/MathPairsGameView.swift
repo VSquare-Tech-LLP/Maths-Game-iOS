@@ -488,6 +488,7 @@ struct MathPairsGameView: View {
                     if pairsFound == totalPairs {
                         isComplete = true
                         timer?.invalidate()
+                        StreakManager.shared.recordActivity()
                         SoundManager.shared.playAchievement()
                         HapticManager.shared.achievement()
                     }

@@ -196,6 +196,7 @@ struct NumberMemoryGameView: View {
                     level += 1
                     startLevel()
                 } else {
+                    StreakManager.shared.recordActivity()
                     phase = .gameOver
                 }
             } label: {

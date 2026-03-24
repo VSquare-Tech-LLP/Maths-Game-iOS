@@ -56,6 +56,9 @@ final class StatsViewModel: ObservableObject {
             UserDefaults.standard.set(allTimeBestStreak, forKey: bestStreakKey)
         }
 
+        // Record activity for streak tracking
+        StreakManager.shared.recordActivity()
+
         saveResults()
     }
 

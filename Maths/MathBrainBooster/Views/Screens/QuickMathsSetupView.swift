@@ -80,6 +80,7 @@ struct QuickMathsSetupView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear { AnalyticsManager.shared.logScreenViewed(screenName: "quick_maths_setup") }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {

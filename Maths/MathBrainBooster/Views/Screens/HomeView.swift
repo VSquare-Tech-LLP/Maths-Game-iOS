@@ -5,6 +5,8 @@ struct HomeView: View {
     @ObservedObject var statsVM = StatsViewModel.shared
     @ObservedObject var achievementMgr = AchievementManager.shared
     @ObservedObject var mistakesMgr = MistakesManager.shared
+    @ObservedObject var paywallManager = PaywallManager.shared
+    @ObservedObject var streakMgr = StreakManager.shared
     @State private var selectedMode: GameMode?
     @State private var showStats = false
     @State private var showAchievements = false
@@ -13,6 +15,9 @@ struct HomeView: View {
     @State private var showMistakesWorkout = false
     @State private var showQuickMaths = false
     @State private var showMiniGames = false
+    @State private var showAdvancedMath = false
+    @State private var showPaywall = false
+    @State private var showStreakHistory = false
     @State private var animateCards = false
 
     private var theme: ColorTheme { settings.selectedTheme }
@@ -25,10 +30,14 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 24) {
                         headerSection
+                        StreakCardView(theme: theme) {
+                            showStreakHistory = true
+                        }
                         dailyChallengeButton
                         gameModeGrid
                         quickMathsButton
                         miniGamesButton
+                        advancedMathButton
                         mistakesWorkoutButton
                         quickStatsBar
                     }
@@ -51,21 +60,36 @@ struct HomeView: View {
             }
             .fullScreenCover(isPresented: $showDailyChallenge) {
                 DailyChallengeView()
+                    .transition(.move(edge: .bottom))
             }
             .fullScreenCover(isPresented: $showMistakesWorkout) {
                 MistakesWorkoutView()
+                    .transition(.move(edge: .bottom))
             }
             .fullScreenCover(isPresented: $showQuickMaths) {
                 QuickMathsSetupView()
+                    .transition(.move(edge: .bottom))
             }
             .fullScreenCover(isPresented: $showMiniGames) {
                 MiniGamesHubView()
+                    .transition(.move(edge: .bottom))
+            }
+            .fullScreenCover(isPresented: $showAdvancedMath) {
+                AdvancedMathHubView()
+                    .transition(.move(edge: .bottom))
+            }
+            .fullScreenCover(isPresented: $showPaywall) {
+                PaywallView()
+            }
+            .fullScreenCover(isPresented: $showStreakHistory) {
+                StreakHistoryView()
             }
             .onAppear {
                 withAnimation(.easeOut(duration: 0.6)) {
                     animateCards = true
                 }
                 GameCenterManager.shared.authenticate()
+                AnalyticsManager.shared.logScreenViewed(screenName: "home")
             }
         }
     }
@@ -74,23 +98,40 @@ struct HomeView: View {
         VStack(spacing: 8) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Math Brain")
+                    Text("MathQ")
                         .font(.system(size: 32, weight: .bold, design: .rounded))
                         .foregroundColor(theme.textPrimary)
-                    Text("Booster")
-                        .font(.system(size: 28, weight: .bold, design: .rounded))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [theme.primary, theme.secondary],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
                 }
 
                 Spacer()
 
                 HStack(spacing: 12) {
+                    if !paywallManager.isProUser {
+                        Button {
+                            SoundManager.shared.playButtonTap()
+                            HapticManager.shared.buttonTap()
+                            showPaywall = true
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "crown.fill")
+                                    .font(.system(size: 14, weight: .bold))
+                                Text("PRO")
+                                    .font(.system(size: 12, weight: .heavy, design: .rounded))
+                            }
+                            .foregroundColor(Color(red: 0.3, green: 0.15, blue: 0.0))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(
+                                LinearGradient(
+                                    colors: [Color(red: 1.0, green: 0.85, blue: 0.0), Color.orange],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .cornerRadius(10)
+                            .shadow(color: Color.orange.opacity(0.3), radius: 4, y: 2)
+                        }
+                    }
                     IconButton(icon: "chart.bar.fill", theme: theme) {
                         showStats = true
                     }
@@ -108,15 +149,17 @@ struct HomeView: View {
 
     private var gameModeGrid: some View {
         LazyVGrid(columns: [
-            GridItem(.flexible(), spacing: 12),
-            GridItem(.flexible(), spacing: 12)
-        ], spacing: 12) {
+            GridItem(.flexible(), spacing: 14),
+            GridItem(.flexible(), spacing: 14)
+        ], spacing: 14) {
             ForEach(Array(GameMode.allCases.enumerated()), id: \.element.id) { index, mode in
                 GameModeCard(mode: mode, theme: theme)
                     .onTapGesture {
                         SoundManager.shared.playButtonTap()
                         HapticManager.shared.buttonTap()
-                        selectedMode = mode
+                        InterstitialAdManager.shared.buttonClicked {
+                            selectedMode = mode
+                        }
                     }
                     .opacity(animateCards ? 1 : 0)
                     .offset(y: animateCards ? 0 : 20)
@@ -133,7 +176,9 @@ struct HomeView: View {
         return Button {
             SoundManager.shared.playButtonTap()
             HapticManager.shared.buttonTap()
-            showDailyChallenge = true
+            InterstitialAdManager.shared.buttonClicked {
+                showDailyChallenge = true
+            }
         } label: {
             HStack(spacing: 14) {
                 ZStack {
@@ -221,7 +266,9 @@ struct HomeView: View {
         Button {
             SoundManager.shared.playButtonTap()
             HapticManager.shared.buttonTap()
-            showQuickMaths = true
+            InterstitialAdManager.shared.buttonClicked {
+                showQuickMaths = true
+            }
         } label: {
             HStack(spacing: 14) {
                 ZStack {
@@ -289,7 +336,9 @@ struct HomeView: View {
         Button {
             SoundManager.shared.playButtonTap()
             HapticManager.shared.buttonTap()
-            showMiniGames = true
+            InterstitialAdManager.shared.buttonClicked {
+                showMiniGames = true
+            }
         } label: {
             HStack(spacing: 14) {
                 ZStack {
@@ -353,11 +402,83 @@ struct HomeView: View {
         }
     }
 
+    private var advancedMathButton: some View {
+        Button {
+            SoundManager.shared.playButtonTap()
+            HapticManager.shared.buttonTap()
+            InterstitialAdManager.shared.buttonClicked {
+                showAdvancedMath = true
+            }
+        } label: {
+            HStack(spacing: 14) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Color(red: 0.30, green: 0.80, blue: 0.45), Color(red: 0.18, green: 0.62, blue: 0.32)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 50, height: 50)
+                        .shadow(color: Color.green.opacity(0.3), radius: 6, y: 2)
+
+                    Image(systemName: "x.squareroot")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundColor(.white)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Advanced Math")
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .foregroundColor(theme.textPrimary)
+
+                    Text("Integers, powers, fractions & percents")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(theme.textSecondary)
+                }
+
+                Spacer()
+
+                Text("GO")
+                    .font(.system(size: 13, weight: .heavy, design: .rounded))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(
+                        LinearGradient(
+                            colors: [Color(red: 0.30, green: 0.80, blue: 0.45), Color(red: 0.18, green: 0.62, blue: 0.32)],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(10)
+                    .shadow(color: Color.green.opacity(0.3), radius: 4, y: 2)
+            }
+            .padding(14)
+            .background(theme.cardBackground)
+            .cornerRadius(18)
+            .overlay(
+                RoundedRectangle(cornerRadius: 18)
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color.green.opacity(0.4), Color.green.opacity(0.15)],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        ),
+                        lineWidth: 1
+                    )
+            )
+        }
+    }
+
     private var mistakesWorkoutButton: some View {
         Button {
             SoundManager.shared.playButtonTap()
             HapticManager.shared.buttonTap()
-            showMistakesWorkout = true
+            InterstitialAdManager.shared.buttonClicked {
+                showMistakesWorkout = true
+            }
         } label: {
             HStack(spacing: 14) {
                 ZStack {
@@ -477,33 +598,59 @@ struct GameModeCard: View {
     let theme: ColorTheme
 
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 14) {
             ZStack {
                 Circle()
-                    .fill(theme.primary.opacity(0.15))
-                    .frame(width: 56, height: 56)
+                    .fill(
+                        LinearGradient(
+                            colors: mode.gradientColors,
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 60, height: 60)
+                    .shadow(color: mode.gradientColors[0].opacity(0.4), radius: 8, y: 4)
 
                 Image(systemName: mode.symbol)
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundColor(theme.primary)
+                    .font(.system(size: 26, weight: .bold))
+                    .foregroundColor(.white)
             }
 
-            Text(mode.rawValue)
-                .font(.system(size: 15, weight: .semibold, design: .rounded))
-                .foregroundColor(theme.textPrimary)
+            VStack(spacing: 4) {
+                Text(mode.rawValue)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundColor(theme.textPrimary)
 
-            Text(mode.operatorString)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(theme.textSecondary)
+                Text(mode.operatorString)
+                    .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                    .foregroundColor(mode.gradientColors[0].opacity(0.8))
+            }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 20)
-        .background(theme.cardBackground)
-        .cornerRadius(20)
-        .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(theme.primary.opacity(0.15), lineWidth: 1)
+        .padding(.vertical, 22)
+        .background(
+            ZStack {
+                theme.cardBackground
+                LinearGradient(
+                    colors: [mode.gradientColors[0].opacity(0.08), Color.clear],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
         )
+        .cornerRadius(22)
+        .overlay(
+            RoundedRectangle(cornerRadius: 22)
+                .stroke(
+                    LinearGradient(
+                        colors: [mode.gradientColors[0].opacity(0.3), mode.gradientColors[1].opacity(0.1)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+        )
+        .shadow(color: Color.black.opacity(0.15), radius: 6, y: 3)
     }
 }
 

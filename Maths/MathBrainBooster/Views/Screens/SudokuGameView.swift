@@ -2,9 +2,13 @@ import SwiftUI
 
 struct SudokuGameView: View {
     @ObservedObject var settings = SettingsViewModel.shared
+    @ObservedObject var rewardAdManager = RewardAdManager.shared
     @Environment(\.dismiss) private var dismiss
     @StateObject private var vm = SudokuVM()
     @State private var isPaused = false
+    @State private var showExtraChancePanel = false
+    @State private var hasUsedExtraChance = false
+    @State private var hasStartedGame = false
 
     private var theme: ColorTheme { settings.selectedTheme }
 
@@ -46,6 +50,8 @@ struct SudokuGameView: View {
                         }
 
                         Button {
+                            hasUsedExtraChance = false
+                            showExtraChancePanel = false
                             vm.generatePuzzle()
                         } label: {
                             Image(systemName: "arrow.counterclockwise")
@@ -105,8 +111,12 @@ struct SudokuGameView: View {
                 completionOverlay
             }
 
-            if vm.mistakes >= 3 {
+            if vm.mistakes >= 3 && !showExtraChancePanel && hasUsedExtraChance {
                 gameOverOverlay
+            }
+
+            if showExtraChancePanel {
+                extraChancePanel
             }
 
             if isPaused {
@@ -118,6 +128,8 @@ struct SudokuGameView: View {
                     },
                     onRestart: {
                         isPaused = false
+                        hasUsedExtraChance = false
+                        showExtraChancePanel = false
                         vm.generatePuzzle()
                     },
                     onGameSelection: {
@@ -134,7 +146,18 @@ struct SudokuGameView: View {
                 )
             }
         }
-        .onAppear { vm.generatePuzzle() }
+        .onAppear {
+            if !hasStartedGame {
+                hasStartedGame = true
+                vm.generatePuzzle()
+                RewardAdManager.shared.loadAd()
+            }
+        }
+        .onChange(of: vm.mistakes) { newVal in
+            if newVal >= 3 && !hasUsedExtraChance {
+                showExtraChancePanel = true
+            }
+        }
     }
 
     private var sudokuGrid: some View {
@@ -256,6 +279,8 @@ struct SudokuGameView: View {
 
                 VStack(spacing: 12) {
                     Button {
+                        hasUsedExtraChance = false
+                        showExtraChancePanel = false
                         vm.generatePuzzle()
                     } label: {
                         HStack { Image(systemName: "arrow.counterclockwise"); Text("New Puzzle") }
@@ -280,6 +305,94 @@ struct SudokuGameView: View {
         }
     }
 
+    // MARK: - Extra Chance Panel
+
+    private var extraChancePanel: some View {
+        ZStack {
+            Color.black.opacity(0.6).ignoresSafeArea()
+
+            VStack(spacing: 20) {
+                // Icon
+                ZStack {
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [.yellow.opacity(0.3), .clear],
+                                center: .center, startRadius: 15, endRadius: 45
+                            )
+                        )
+                        .frame(width: 90, height: 90)
+
+                    Image(systemName: "heart.circle.fill")
+                        .font(.system(size: 52))
+                        .foregroundStyle(
+                            LinearGradient(colors: [.pink, .red], startPoint: .top, endPoint: .bottom)
+                        )
+                }
+
+                Text("Out of Chances!")
+                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .foregroundColor(theme.textPrimary)
+
+                Text("Watch a short video to get\none more chance to continue")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundColor(theme.textSecondary)
+                    .multilineTextAlignment(.center)
+
+                VStack(spacing: 12) {
+                    // Watch Ad Button
+                    Button {
+                        showExtraChancePanel = false
+                        RewardAdManager.shared.showAd(
+                            rewardType: .extraChance,
+                            onReward: { _ in
+                                hasUsedExtraChance = true
+                                vm.grantExtraChance()
+                            },
+                            onDismiss: {
+                                // If reward wasn't granted, game over stays
+                            }
+                        )
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "play.circle.fill")
+                            Text("Watch Ad for Extra Chance")
+                        }
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 15)
+                        .background(
+                            LinearGradient(colors: [.green, .mint], startPoint: .leading, endPoint: .trailing)
+                        )
+                        .cornerRadius(14)
+                        .shadow(color: .green.opacity(0.3), radius: 8, y: 4)
+                    }
+
+                    // No Thanks Button
+                    Button {
+                        showExtraChancePanel = false
+                    } label: {
+                        Text("No Thanks")
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .foregroundColor(theme.textSecondary)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(theme.cardBackground)
+                            .cornerRadius(14)
+                    }
+                }
+            }
+            .padding(28)
+            .background(
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(theme.background)
+                    .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
+            )
+            .padding(.horizontal, 32)
+        }
+    }
+
     private var gameOverOverlay: some View {
         ZStack {
             Color.black.opacity(0.5).ignoresSafeArea()
@@ -293,7 +406,7 @@ struct SudokuGameView: View {
                 Text("Too many mistakes!")
                     .font(.system(size: 16, weight: .medium)).foregroundColor(theme.textSecondary)
                 VStack(spacing: 12) {
-                    Button { vm.generatePuzzle() } label: {
+                    Button { hasUsedExtraChance = false; showExtraChancePanel = false; vm.generatePuzzle() } label: {
                         HStack { Image(systemName: "arrow.counterclockwise"); Text("Try Again") }
                             .font(.system(size: 18, weight: .bold, design: .rounded))
                             .foregroundColor(.white).frame(maxWidth: .infinity).padding(.vertical, 14)
@@ -328,6 +441,7 @@ final class SudokuVM: ObservableObject {
     @Published var isComplete = false
     @Published var elapsedTime: TimeInterval = 0
     @Published var hintsRemaining = 3
+    @Published var gotExtraChance = false
 
     private var timer: Timer?
 
@@ -344,6 +458,7 @@ final class SudokuVM: ObservableObject {
         selectedRow = -1
         selectedCol = -1
         hintsRemaining = 3
+        gotExtraChance = false
         errors = Array(repeating: Array(repeating: false, count: 9), count: 9)
 
         // Generate a solved board
@@ -430,6 +545,26 @@ final class SudokuVM: ObservableObject {
         checkCompletion()
     }
 
+    func grantExtraChance() {
+        // Reset mistakes to 0 — player gets 3 fresh chances
+        // Board, time — everything stays as-is, game continues from where they left off
+        mistakes = 0
+        gotExtraChance = true
+
+        // Only clear cells that have WRONG answers (verify against solution)
+        // Keep all correctly placed answers intact
+        for r in 0..<9 {
+            for c in 0..<9 {
+                if !fixed[r][c] && board[r][c] != 0 && board[r][c] != solution[r][c] {
+                    errors[r][c] = false
+                    board[r][c] = 0
+                }
+            }
+        }
+
+        startTimer()
+    }
+
     func pauseTimer() {
         timer?.invalidate()
     }
@@ -446,6 +581,7 @@ final class SudokuVM: ObservableObject {
         }
         isComplete = true
         timer?.invalidate()
+        StreakManager.shared.recordActivity()
         SoundManager.shared.playAchievement()
         HapticManager.shared.achievement()
     }

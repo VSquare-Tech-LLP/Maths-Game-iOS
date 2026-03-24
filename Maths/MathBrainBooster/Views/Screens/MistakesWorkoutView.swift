@@ -627,6 +627,10 @@ struct MistakesWorkoutView: View {
         } else {
             showResults = true
             isWorkoutActive = false
+            // Record activity for streak tracking
+            StreakManager.shared.recordActivity()
+            // Show interstitial ad after workout
+            InterstitialAdManager.shared.gameCompleted()
         }
     }
 }

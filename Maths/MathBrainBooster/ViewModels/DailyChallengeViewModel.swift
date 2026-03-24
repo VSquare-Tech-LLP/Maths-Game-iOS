@@ -77,6 +77,7 @@ final class DailyChallengeViewModel: ObservableObject {
         currentRoundIndex = 0
         roundStats = []
         phase = .roundIntro
+        AnalyticsManager.shared.logDailyChallengeStarted()
     }
 
     func resetChallenge() {
@@ -123,6 +124,8 @@ final class DailyChallengeViewModel: ObservableObject {
     }
 
     private func nextQuestion(round: DailyChallengeRound) {
+        // Prevent stale delayed calls from executing
+        guard phase == .playing else { return }
         guard questionNumber < round.questionsCount else {
             finishRound()
             return
@@ -162,6 +165,7 @@ final class DailyChallengeViewModel: ObservableObject {
         lastAnswerCorrect = isCorrect
         showAnswerFeedback = true
         currentStats.questionsAnswered += 1
+        AnalyticsManager.shared.logAnswerSubmitted(isCorrect: isCorrect, currentStreak: currentStats.currentStreak, mode: round.mode)
 
         if isCorrect {
             currentStats.correctAnswers += 1
@@ -201,6 +205,12 @@ final class DailyChallengeViewModel: ObservableObject {
     }
 
     private func handleTimeout(round: DailyChallengeRound) {
+        // CRITICAL: Invalidate timer first to prevent repeated calls
+        timer?.invalidate()
+
+        // Guard against re-entry
+        guard phase == .playing, !showAnswerFeedback else { return }
+
         currentStats.questionsAnswered += 1
         currentStats.wrongAnswers += 1
         currentStats.currentStreak = 0
@@ -265,8 +275,16 @@ final class DailyChallengeViewModel: ObservableObject {
         updateStreak()
         saveState()
 
+        // Record activity for streak tracking
+        StreakManager.shared.recordActivity()
+
         SoundManager.shared.playAchievement()
         HapticManager.shared.achievement()
+        AnalyticsManager.shared.logDailyChallengeCompleted(score: overallScore, accuracy: overallAccuracy,
+                                                           bestStreak: overallBestStreak, dayStreak: currentDayStreak)
+
+        // Show interstitial ad every few games
+        InterstitialAdManager.shared.gameCompleted()
     }
 
     private func updateStreak() {

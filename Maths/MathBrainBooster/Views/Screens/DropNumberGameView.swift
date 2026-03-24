@@ -560,6 +560,7 @@ struct DropNumberGameView: View {
             bestScore = score
             UserDefaults.standard.set(bestScore, forKey: "dropNumberBest")
         }
+        StreakManager.shared.recordActivity()
         SoundManager.shared.playWrong()
         HapticManager.shared.wrongAnswer()
     }
@@ -570,6 +571,7 @@ struct DropNumberGameView: View {
             bestScore = score
             UserDefaults.standard.set(bestScore, forKey: "dropNumberBest")
         }
+        StreakManager.shared.recordActivity()
         SoundManager.shared.playAchievement()
         HapticManager.shared.achievement()
     }

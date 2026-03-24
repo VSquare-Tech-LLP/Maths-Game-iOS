@@ -409,6 +409,7 @@ struct QuickMathsGameView: View {
                             endPoint: .trailing
                         )
                     )
+                    .contentTransition(.numericText())
 
                 Text("Total Score")
                     .font(.system(size: 16, weight: .medium))

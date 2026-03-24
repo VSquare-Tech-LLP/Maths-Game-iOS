@@ -238,6 +238,12 @@ final class TugOfWarViewModel: ObservableObject {
     }
 
     private func handlePlayerTimeout() {
+        // CRITICAL: Invalidate timer first to prevent repeated calls
+        timer?.invalidate()
+
+        // Guard against re-entry
+        guard gamePhase == .playing, !showAnswerFeedback else { return }
+
         playerWrong += 1
         playerStreak = 0
         playerMultiplier = 1
@@ -369,6 +375,9 @@ final class TugOfWarViewModel: ObservableObject {
         StatsViewModel.shared.addResult(result)
         AchievementManager.shared.checkAchievements(result: result, stats: playerStats)
         GameCenterManager.shared.submitScore(playerScore, mode: gameMode, difficulty: difficulty)
+
+        // Show interstitial ad every few games
+        InterstitialAdManager.shared.gameCompleted()
     }
 
     func resetGame() {

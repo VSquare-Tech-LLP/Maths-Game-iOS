@@ -36,6 +36,7 @@ final class SettingsViewModel: ObservableObject {
     func resetAllData() {
         StatsViewModel.shared.resetAll()
         AchievementManager.shared.resetAll()
+        StreakManager.shared.resetAll()
         showConfirmReset = false
     }
 }

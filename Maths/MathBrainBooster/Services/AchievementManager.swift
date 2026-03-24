@@ -50,6 +50,7 @@ final class AchievementManager: ObservableObject {
         achievements[index].isUnlocked = true
         achievements[index].unlockedDate = Date()
         saveAchievements()
+        AnalyticsManager.shared.logAchievementUnlocked(achievementId: achievementID)
 
         newlyUnlocked = achievements[index]
         withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {

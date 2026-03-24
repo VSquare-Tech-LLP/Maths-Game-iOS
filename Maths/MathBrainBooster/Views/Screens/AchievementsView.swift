@@ -38,6 +38,7 @@ struct AchievementsView: View {
                 withAnimation(.easeOut(duration: 0.5)) {
                     animateItems = true
                 }
+                AnalyticsManager.shared.logScreenViewed(screenName: "achievements")
             }
         }
     }

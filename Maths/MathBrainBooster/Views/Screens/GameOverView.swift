@@ -10,6 +10,7 @@ struct GameOverView: View {
     @ObservedObject var settings = SettingsViewModel.shared
     @State private var animateResults = false
     @State private var showScore = false
+    @State private var displayScore: Int = 0
 
     private var theme: ColorTheme { settings.selectedTheme }
 
@@ -25,6 +26,7 @@ struct GameOverView: View {
         }
         .background(theme.background)
         .onAppear {
+            displayScore = stats.totalScore
             withAnimation(.easeOut(duration: 0.6).delay(0.2)) {
                 animateResults = true
             }
@@ -54,7 +56,7 @@ struct GameOverView: View {
 
     private var scoreSection: some View {
         VStack(spacing: 8) {
-            Text("\(stats.totalScore)")
+            Text("\(displayScore)")
                 .font(.system(size: 56, weight: .heavy, design: .rounded))
                 .foregroundStyle(
                     LinearGradient(
@@ -65,6 +67,7 @@ struct GameOverView: View {
                 )
                 .scaleEffect(showScore ? 1 : 0.3)
                 .opacity(showScore ? 1 : 0)
+                .contentTransition(.numericText())
 
             Text("Total Score")
                 .font(.system(size: 16, weight: .medium))

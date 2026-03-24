@@ -52,11 +52,7 @@ struct DifficultySelectView: View {
         }
         .navigationDestination(isPresented: $navigateToGame) {
             if let difficulty = selectedDifficulty {
-                if gameMode == .addition {
-                    TugOfWarGameView(gameMode: gameMode, difficulty: difficulty)
-                } else {
-                    GameView(gameMode: gameMode, difficulty: difficulty)
-                }
+                GameView(gameMode: gameMode, difficulty: difficulty)
             }
         }
         .navigationBarTitleDisplayMode(.inline)

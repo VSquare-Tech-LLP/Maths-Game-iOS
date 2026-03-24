@@ -31,6 +31,7 @@ struct StatsView: View {
                 }
             }
             .toolbarBackground(theme.background, for: .navigationBar)
+            .onAppear { AnalyticsManager.shared.logScreenViewed(screenName: "stats") }
         }
     }
 

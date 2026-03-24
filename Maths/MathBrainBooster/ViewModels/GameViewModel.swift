@@ -22,6 +22,8 @@ final class GameViewModel: ObservableObject {
     private let soundManager = SoundManager.shared
     private let hapticManager = HapticManager.shared
     private let achievementManager = AchievementManager.shared
+    private let analytics = AnalyticsManager.shared
+    private let interstitialManager = InterstitialAdManager.shared
 
     var timerProgress: CGFloat {
         guard totalTime > 0 else { return 1 }
@@ -55,6 +57,7 @@ final class GameViewModel: ObservableObject {
         self.gamePhase = .countdown
         self.countdownValue = 3
 
+        analytics.logGameStarted(mode: mode, difficulty: difficulty)
         startCountdown()
     }
 
@@ -79,6 +82,8 @@ final class GameViewModel: ObservableObject {
     }
 
     func nextQuestion() {
+        // Prevent stale delayed calls from executing after game ends
+        guard gamePhase == .playing else { return }
         guard questionNumber < totalQuestions else {
             endGame()
             return
@@ -118,6 +123,7 @@ final class GameViewModel: ObservableObject {
         lastAnswerCorrect = isCorrect
         showAnswerFeedback = true
         stats.questionsAnswered += 1
+        analytics.logAnswerSubmitted(isCorrect: isCorrect, currentStreak: stats.currentStreak, mode: gameMode)
 
         if isCorrect {
             stats.correctAnswers += 1
@@ -157,6 +163,12 @@ final class GameViewModel: ObservableObject {
     }
 
     private func handleTimeout() {
+        // CRITICAL: Invalidate timer first to prevent repeated calls
+        timer?.invalidate()
+
+        // Guard against re-entry (if timer already handled or answer already shown)
+        guard gamePhase == .playing, !showAnswerFeedback else { return }
+
         stats.questionsAnswered += 1
         stats.wrongAnswers += 1
         stats.currentStreak = 0
@@ -211,6 +223,12 @@ final class GameViewModel: ObservableObject {
         StatsViewModel.shared.addResult(result)
         achievementManager.checkAchievements(result: result, stats: stats)
         GameCenterManager.shared.submitScore(stats.totalScore, mode: gameMode, difficulty: difficulty)
+        analytics.logGameCompleted(mode: gameMode, difficulty: difficulty, score: stats.totalScore,
+                                   accuracy: stats.accuracy, bestStreak: stats.bestStreak,
+                                   correctAnswers: stats.correctAnswers, totalQuestions: stats.questionsAnswered)
+
+        // Show interstitial ad every few games
+        interstitialManager.gameCompleted()
     }
 
     func resetGame() {
@@ -225,11 +243,13 @@ final class GameViewModel: ObservableObject {
         guard gamePhase == .playing else { return }
         timer?.invalidate()
         gamePhase = .paused
+        analytics.logGamePaused(mode: gameMode)
     }
 
     func resumeGame() {
         guard gamePhase == .paused else { return }
         gamePhase = .playing
         startTimer()
+        analytics.logGameResumed(mode: gameMode)
     }
 }

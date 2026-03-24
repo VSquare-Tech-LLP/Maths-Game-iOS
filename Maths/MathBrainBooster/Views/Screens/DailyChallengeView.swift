@@ -28,6 +28,7 @@ struct DailyChallengeView: View {
                 resultsContent
             }
         }
+        .onAppear { AnalyticsManager.shared.logScreenViewed(screenName: "daily_challenge") }
     }
 
     // MARK: - Overview
@@ -418,6 +419,7 @@ struct DailyChallengeView: View {
                     .foregroundStyle(
                         LinearGradient(colors: [.orange, .red], startPoint: .leading, endPoint: .trailing)
                     )
+                    .contentTransition(.numericText())
 
                 LazyVGrid(columns: [
                     GridItem(.flexible(), spacing: 12),

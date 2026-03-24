@@ -269,7 +269,10 @@ struct NumberSequenceGameView: View {
             HapticManager.shared.wrongAnswer()
 
             if lives <= 0 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { isGameOver = true }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    StreakManager.shared.recordActivity()
+                    isGameOver = true
+                }
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { generateQuestion() }
             }

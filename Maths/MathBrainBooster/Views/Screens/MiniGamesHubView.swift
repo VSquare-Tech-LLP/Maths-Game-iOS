@@ -49,6 +49,7 @@ struct MiniGamesHubView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear { AnalyticsManager.shared.logScreenViewed(screenName: "mini_games_hub") }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
@@ -107,6 +108,7 @@ struct MiniGamesHubView: View {
         Button {
             SoundManager.shared.playButtonTap()
             HapticManager.shared.buttonTap()
+            AnalyticsManager.shared.logMiniGameStarted(gameName: game.title)
             selectedGame = game.title
         } label: {
             VStack(spacing: 12) {

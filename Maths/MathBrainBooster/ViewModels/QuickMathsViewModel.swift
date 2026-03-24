@@ -74,6 +74,8 @@ final class QuickMathsViewModel: ObservableObject {
     private var timer: Timer?
     private let soundManager = SoundManager.shared
     private let hapticManager = HapticManager.shared
+    private let analytics = AnalyticsManager.shared
+    private let interstitialManager = InterstitialAdManager.shared
 
     // MARK: - Computed
 
@@ -139,6 +141,8 @@ final class QuickMathsViewModel: ObservableObject {
 
         gamePhase = .countdown
         countdownValue = 3
+        analytics.logQuickMathsStarted(mode: mode, difficulty: difficulty,
+                                       timerMode: timerMode.label, questionLimit: questionLimit.label)
         startCountdown()
     }
 
@@ -166,6 +170,7 @@ final class QuickMathsViewModel: ObservableObject {
     // MARK: - Questions
 
     private func nextQuestion() {
+        guard gamePhase == .playing else { return }
         guard !isGameFinished() else { endGame(); return }
 
         questionNumber += 1
@@ -183,6 +188,7 @@ final class QuickMathsViewModel: ObservableObject {
         lastAnswerCorrect = isCorrect
         showAnswerFeedback = true
         stats.questionsAnswered += 1
+        analytics.logAnswerSubmitted(isCorrect: isCorrect, currentStreak: stats.currentStreak, mode: gameMode)
 
         if isCorrect {
             stats.correctAnswers += 1
@@ -236,6 +242,7 @@ final class QuickMathsViewModel: ObservableObject {
                 self.timeRemaining -= 0.05
                 if self.timeRemaining <= 0 {
                     self.timeRemaining = 0
+                    self.timer?.invalidate()
                     self.endGame()
                 }
             }
@@ -270,6 +277,12 @@ final class QuickMathsViewModel: ObservableObject {
         StatsViewModel.shared.addResult(result)
         AchievementManager.shared.checkAchievements(result: result, stats: stats)
         GameCenterManager.shared.submitScore(stats.totalScore, mode: gameMode, difficulty: difficulty)
+        analytics.logQuickMathsCompleted(mode: gameMode, difficulty: difficulty, score: stats.totalScore,
+                                         accuracy: stats.accuracy, bestStreak: stats.bestStreak,
+                                         totalQuestions: stats.questionsAnswered)
+
+        // Show interstitial ad every few games
+        interstitialManager.gameCompleted()
     }
 
     private func updateMultiplier() {

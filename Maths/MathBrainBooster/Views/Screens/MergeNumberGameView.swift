@@ -9,12 +9,15 @@ struct MergeBall: Identifiable {
     var y: CGFloat
     var vx: CGFloat = 0
     var vy: CGFloat = 0
-    var radius: CGFloat { MergeBall.radius(for: value) }
     var isStatic = false
     var justMerged = false
     var mergeScale: CGFloat = 1.0
 
-    static func radius(for value: Int) -> CGFloat {
+    func radius(scale: CGFloat = 1.0) -> CGFloat {
+        MergeBall.baseRadius(for: value) * scale
+    }
+
+    static func baseRadius(for value: Int) -> CGFloat {
         switch value {
         case 2:    return 20
         case 4:    return 24
@@ -67,6 +70,7 @@ struct MergeParticle: Identifiable {
 struct MergeNumberGameView: View {
     @ObservedObject var settings = SettingsViewModel.shared
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.horizontalSizeClass) private var hSizeClass
 
     @State private var balls: [MergeBall] = []
     @State private var particles: [MergeParticle] = []
@@ -83,92 +87,117 @@ struct MergeNumberGameView: View {
     @State private var highestValue = 2
     @State private var comboCount = 0
     @State private var showCombo = false
+    @State private var layoutSize: CGSize = .zero
 
     // Physics
     private let gravity: CGFloat = 0.45
     private let damping: CGFloat = 0.65
     private let friction: CGFloat = 0.97
     private let containerPadding: CGFloat = 4
-    private let topDangerY: CGFloat = 55
-    private let dropStartY: CGFloat = 25
 
     private var theme: ColorTheme { settings.selectedTheme }
-    private let containerWidth: CGFloat = UIScreen.main.bounds.width - 40
-    private let containerHeight: CGFloat = UIScreen.main.bounds.height * 0.52
+    private var isIPad: Bool { hSizeClass == .regular }
+
+    // Dynamic sizing based on actual layout
+    private var containerWidth: CGFloat {
+        let screenW = layoutSize.width > 0 ? layoutSize.width : UIScreen.main.bounds.width
+        if isIPad {
+            return min(screenW - 60, 520)
+        }
+        return screenW - 40
+    }
+
+    private var containerHeight: CGFloat {
+        let screenH = layoutSize.height > 0 ? layoutSize.height : UIScreen.main.bounds.height
+        if isIPad {
+            return min(screenH * 0.58, 680)
+        }
+        return screenH * 0.52
+    }
+
+    /// Scale factor for ball radii on iPad
+    private var ballScale: CGFloat { isIPad ? 1.35 : 1.0 }
+
+    private var topDangerY: CGFloat { isIPad ? 70 : 55 }
+    private var dropStartY: CGFloat { isIPad ? 30 : 25 }
 
     var body: some View {
-        ZStack {
-            // Rich gradient background
-            LinearGradient(
-                colors: [
-                    Color(red: 0.18, green: 0.15, blue: 0.25),
-                    Color(red: 0.25, green: 0.18, blue: 0.30),
-                    Color(red: 0.20, green: 0.16, blue: 0.28)
-                ],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            ).ignoresSafeArea()
+        GeometryReader { geo in
+            ZStack {
+                // Rich gradient background
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.18, green: 0.15, blue: 0.25),
+                        Color(red: 0.25, green: 0.18, blue: 0.30),
+                        Color(red: 0.20, green: 0.16, blue: 0.28)
+                    ],
+                    startPoint: .topLeading, endPoint: .bottomTrailing
+                ).ignoresSafeArea()
 
-            // Subtle pattern overlay
-            VStack(spacing: 40) {
-                ForEach(0..<20, id: \.self) { _ in
-                    HStack(spacing: 40) {
-                        ForEach(0..<10, id: \.self) { _ in
-                            Circle()
-                                .fill(Color.white.opacity(0.015))
-                                .frame(width: 4, height: 4)
+                // Subtle pattern overlay
+                VStack(spacing: 40) {
+                    ForEach(0..<20, id: \.self) { _ in
+                        HStack(spacing: 40) {
+                            ForEach(0..<10, id: \.self) { _ in
+                                Circle()
+                                    .fill(Color.white.opacity(0.015))
+                                    .frame(width: 4, height: 4)
+                            }
                         }
                     }
                 }
-            }
-            .ignoresSafeArea()
 
-            VStack(spacing: 8) {
-                topBar
-                scoreSection
-                dropArea
-                gameContainer
-                Spacer(minLength: 4)
-            }
-            .padding(.top, 8)
+                VStack(spacing: isIPad ? 12 : 8) {
+                    topBar
+                    scoreSection
+                    dropArea
+                    gameContainer
+                    Spacer(minLength: 4)
+                }
+                .padding(.top, isIPad ? 16 : 50)
+                .frame(maxWidth: isIPad ? 580 : .infinity)
 
-            // Combo popup
-            if showCombo && comboCount >= 2 {
-                Text("COMBO x\(comboCount)!")
-                    .font(.system(size: 28, weight: .heavy, design: .rounded))
-                    .foregroundColor(.yellow)
-                    .shadow(color: .orange, radius: 10)
-                    .shadow(color: .orange.opacity(0.5), radius: 20)
-                    .transition(.scale.combined(with: .opacity))
-                    .zIndex(200)
-            }
+                // Combo popup
+                if showCombo && comboCount >= 2 {
+                    Text("COMBO x\(comboCount)!")
+                        .font(.system(size: isIPad ? 36 : 28, weight: .heavy, design: .rounded))
+                        .foregroundColor(.yellow)
+                        .shadow(color: .orange, radius: 10)
+                        .shadow(color: .orange.opacity(0.5), radius: 20)
+                        .transition(.scale.combined(with: .opacity))
+                        .zIndex(200)
+                }
 
-            if isGameOver { gameOverOverlay }
+                if isGameOver { gameOverOverlay }
 
-            if isPaused {
-                MiniGamePauseOverlay(
-                    theme: theme,
-                    onResume: { isPaused = false; startPhysics() },
-                    onRestart: { isPaused = false; resetGame() },
-                    onGameSelection: { isPaused = false; timer?.invalidate(); dismiss() },
-                    onHome: {
-                        timer?.invalidate(); dismiss()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            NotificationCenter.default.post(name: .miniGameGoHome, object: nil)
+                if isPaused {
+                    MiniGamePauseOverlay(
+                        theme: theme,
+                        onResume: { isPaused = false; startPhysics() },
+                        onRestart: { isPaused = false; resetGame() },
+                        onGameSelection: { isPaused = false; timer?.invalidate(); dismiss() },
+                        onHome: {
+                            timer?.invalidate(); dismiss()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                NotificationCenter.default.post(name: .miniGameGoHome, object: nil)
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
-        }
-        .onAppear {
-            dropX = containerWidth / 2
-            nextValue = randomDropValue()
-            startPhysics()
-        }
-        .onDisappear { timer?.invalidate() }
-        .onAppear {
-            withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
-                dangerPulse = true
+            .onAppear {
+                layoutSize = geo.size
+                dropX = containerWidth / 2
+                nextValue = randomDropValue()
+                startPhysics()
+                withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
+                    dangerPulse = true
+                }
             }
+            .onChange(of: geo.size) { _, newSize in
+                layoutSize = newSize
+            }
+            .onDisappear { timer?.invalidate() }
         }
     }
 
@@ -178,9 +207,9 @@ struct MergeNumberGameView: View {
         HStack {
             Button { timer?.invalidate(); dismiss() } label: {
                 Image(systemName: "xmark")
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.system(size: isIPad ? 17 : 15, weight: .bold))
                     .foregroundColor(.white.opacity(0.8))
-                    .frame(width: 38, height: 38)
+                    .frame(width: isIPad ? 44 : 38, height: isIPad ? 44 : 38)
                     .background(
                         Circle().fill(Color.white.opacity(0.1))
                             .overlay(Circle().stroke(Color.white.opacity(0.15), lineWidth: 1))
@@ -188,23 +217,23 @@ struct MergeNumberGameView: View {
             }
             Spacer()
             Text("Merge Numbers")
-                .font(.system(size: 22, weight: .heavy, design: .rounded))
+                .font(.system(size: isIPad ? 26 : 22, weight: .heavy, design: .rounded))
                 .foregroundStyle(
                     LinearGradient(colors: [.white, .white.opacity(0.8)], startPoint: .top, endPoint: .bottom)
                 )
             Spacer()
             Button { isPaused = true; timer?.invalidate() } label: {
                 Image(systemName: "pause.fill")
-                    .font(.system(size: 13, weight: .bold))
+                    .font(.system(size: isIPad ? 15 : 13, weight: .bold))
                     .foregroundColor(.white.opacity(0.8))
-                    .frame(width: 38, height: 38)
+                    .frame(width: isIPad ? 44 : 38, height: isIPad ? 44 : 38)
                     .background(
                         Circle().fill(Color.white.opacity(0.1))
                             .overlay(Circle().stroke(Color.white.opacity(0.15), lineWidth: 1))
                     )
             }
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, isIPad ? 24 : 16)
     }
 
     // MARK: - Score Section
@@ -212,25 +241,25 @@ struct MergeNumberGameView: View {
     private var scoreSection: some View {
         HStack(spacing: 0) {
             // Best
-            VStack(spacing: 3) {
+            VStack(spacing: isIPad ? 5 : 3) {
                 HStack(spacing: 4) {
-                    Image(systemName: "trophy.fill").font(.system(size: 10)).foregroundColor(.yellow.opacity(0.7))
-                    Text("BEST").font(.system(size: 9, weight: .heavy, design: .rounded)).foregroundColor(.white.opacity(0.5))
+                    Image(systemName: "trophy.fill").font(.system(size: isIPad ? 12 : 10)).foregroundColor(.yellow.opacity(0.7))
+                    Text("BEST").font(.system(size: isIPad ? 11 : 9, weight: .heavy, design: .rounded)).foregroundColor(.white.opacity(0.5))
                 }
                 Text("\(bestScore)")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .font(.system(size: isIPad ? 24 : 20, weight: .bold, design: .rounded))
                     .foregroundColor(.yellow)
             }
             .frame(maxWidth: .infinity)
 
             // Score - center, larger
-            VStack(spacing: 1) {
+            VStack(spacing: isIPad ? 2 : 1) {
                 Text("SCORE")
-                    .font(.system(size: 9, weight: .heavy, design: .rounded))
+                    .font(.system(size: isIPad ? 11 : 9, weight: .heavy, design: .rounded))
                     .foregroundColor(.white.opacity(0.5))
                     .tracking(2)
                 Text("\(score)")
-                    .font(.system(size: 32, weight: .heavy, design: .rounded))
+                    .font(.system(size: isIPad ? 40 : 32, weight: .heavy, design: .rounded))
                     .foregroundStyle(
                         LinearGradient(colors: [.white, .white.opacity(0.85)], startPoint: .top, endPoint: .bottom)
                     )
@@ -238,61 +267,63 @@ struct MergeNumberGameView: View {
             .frame(maxWidth: .infinity)
 
             // Highest ball
-            VStack(spacing: 3) {
+            VStack(spacing: isIPad ? 5 : 3) {
                 HStack(spacing: 4) {
-                    Image(systemName: "star.fill").font(.system(size: 10)).foregroundColor(.orange.opacity(0.7))
-                    Text("MAX").font(.system(size: 9, weight: .heavy, design: .rounded)).foregroundColor(.white.opacity(0.5))
+                    Image(systemName: "star.fill").font(.system(size: isIPad ? 12 : 10)).foregroundColor(.orange.opacity(0.7))
+                    Text("MAX").font(.system(size: isIPad ? 11 : 9, weight: .heavy, design: .rounded)).foregroundColor(.white.opacity(0.5))
                 }
                 Text("\(highestValue)")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .font(.system(size: isIPad ? 24 : 20, weight: .bold, design: .rounded))
                     .foregroundColor(.orange)
             }
             .frame(maxWidth: .infinity)
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, isIPad ? 14 : 10)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: isIPad ? 18 : 16)
                 .fill(Color.white.opacity(0.06))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: isIPad ? 18 : 16)
                         .stroke(Color.white.opacity(0.08), lineWidth: 1)
                 )
         )
-        .padding(.horizontal, 16)
+        .padding(.horizontal, isIPad ? 24 : 16)
     }
 
     // MARK: - Drop Area
 
     private var dropArea: some View {
-        ZStack {
+        let dropAreaHeight: CGFloat = isIPad ? 80 : 65
+
+        return ZStack {
             // Dotted drop guide line
             Path { path in
-                path.move(to: CGPoint(x: dropX, y: 40))
-                path.addLine(to: CGPoint(x: dropX, y: 65))
+                path.move(to: CGPoint(x: dropX, y: dropAreaHeight * 0.62))
+                path.addLine(to: CGPoint(x: dropX, y: dropAreaHeight))
             }
             .stroke(style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
             .foregroundColor(Color.white.opacity(0.2))
 
             // The ball to drop
             if canDrop {
-                glossyBallView(value: nextValue, radius: MergeBall.radius(for: nextValue))
-                    .position(x: dropX, y: 18)
+                glossyBallView(value: nextValue, radius: MergeBall.baseRadius(for: nextValue) * ballScale)
+                    .position(x: dropX, y: dropAreaHeight * 0.28)
                     .shadow(color: MergeBall.ballColors(for: nextValue).main.opacity(0.4), radius: 8)
             }
 
             // "Next" label
             Text("NEXT")
-                .font(.system(size: 8, weight: .heavy, design: .rounded))
+                .font(.system(size: isIPad ? 10 : 8, weight: .heavy, design: .rounded))
                 .foregroundColor(.white.opacity(0.3))
                 .tracking(2)
-                .position(x: containerWidth / 2, y: 58)
+                .position(x: containerWidth / 2, y: dropAreaHeight * 0.88)
         }
-        .frame(width: containerWidth, height: 65)
+        .frame(width: containerWidth, height: dropAreaHeight)
         .gesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { value in
                     isDragging = true
-                    let r = MergeBall.radius(for: nextValue)
+                    let r = MergeBall.baseRadius(for: nextValue) * ballScale
                     dropX = max(r + 4, min(containerWidth - r - 4, value.location.x))
                 }
                 .onEnded { _ in
@@ -307,7 +338,7 @@ struct MergeNumberGameView: View {
     private var gameContainer: some View {
         ZStack(alignment: .topLeading) {
             // Container bg with inner shadow effect
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: isIPad ? 18 : 14)
                 .fill(
                     LinearGradient(
                         colors: [
@@ -318,7 +349,7 @@ struct MergeNumberGameView: View {
                     )
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 14)
+                    RoundedRectangle(cornerRadius: isIPad ? 18 : 14)
                         .stroke(
                             LinearGradient(
                                 colors: [
@@ -340,8 +371,8 @@ struct MergeNumberGameView: View {
                     colors: [Color.clear, Color.white.opacity(0.03)],
                     startPoint: .top, endPoint: .bottom
                 )
-                .frame(height: 80)
-                .cornerRadius(14)
+                .frame(height: isIPad ? 100 : 80)
+                .cornerRadius(isIPad ? 18 : 14)
             }
 
             // Danger line with glow
@@ -379,14 +410,15 @@ struct MergeNumberGameView: View {
 
             // Balls
             ForEach(balls) { ball in
-                glossyBallView(value: ball.value, radius: ball.radius, flash: ball.justMerged)
+                let r = ball.radius(scale: ballScale)
+                glossyBallView(value: ball.value, radius: r, flash: ball.justMerged)
                     .position(x: ball.x, y: ball.y)
                     .scaleEffect(ball.mergeScale)
                     .shadow(color: MergeBall.ballColors(for: ball.value).main.opacity(0.3), radius: ball.justMerged ? 12 : 4)
             }
         }
         .frame(width: containerWidth, height: containerHeight)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: isIPad ? 18 : 14))
         .padding(.horizontal, 4)
     }
 
@@ -501,6 +533,7 @@ struct MergeNumberGameView: View {
         let bottom = containerHeight - containerPadding
         let left: CGFloat = containerPadding
         let right = containerWidth - containerPadding
+        let scale = ballScale
 
         // Move balls
         for i in 0..<balls.count {
@@ -510,7 +543,7 @@ struct MergeNumberGameView: View {
             balls[i].x += balls[i].vx
             balls[i].y += balls[i].vy
 
-            let r = balls[i].radius
+            let r = balls[i].radius(scale: scale)
 
             // Floor
             if balls[i].y + r > bottom {
@@ -541,7 +574,7 @@ struct MergeNumberGameView: View {
                 let dx = balls[j].x - balls[i].x
                 let dy = balls[j].y - balls[i].y
                 let dist = sqrt(dx * dx + dy * dy)
-                let minDist = balls[i].radius + balls[j].radius
+                let minDist = balls[i].radius(scale: scale) + balls[j].radius(scale: scale)
 
                 if dist < minDist && dist > 0.1 {
                     let nx = dx / dist
@@ -578,8 +611,10 @@ struct MergeNumberGameView: View {
                         let relVDotN = relVx * nx + relVy * ny
 
                         if relVDotN < 0 {
-                            let m1 = balls[i].radius * balls[i].radius
-                            let m2 = balls[j].radius * balls[j].radius
+                            let ri = balls[i].radius(scale: scale)
+                            let rj = balls[j].radius(scale: scale)
+                            let m1 = ri * ri
+                            let m2 = rj * rj
                             let totalM = m1 + m2
                             let impulse = relVDotN * damping
 
@@ -628,7 +663,7 @@ struct MergeNumberGameView: View {
         // Game over check
         let settled = balls.filter { abs($0.vy) < 1 && abs($0.vx) < 1 }
         for ball in settled {
-            if ball.y - ball.radius < topDangerY {
+            if ball.y - ball.radius(scale: scale) < topDangerY {
                 gameOver()
                 return
             }
@@ -657,6 +692,7 @@ struct MergeNumberGameView: View {
             bestScore = score
             UserDefaults.standard.set(bestScore, forKey: "mergeNumberBest")
         }
+        StreakManager.shared.recordActivity()
         SoundManager.shared.playWrong()
         HapticManager.shared.wrongAnswer()
     }
@@ -681,7 +717,7 @@ struct MergeNumberGameView: View {
         ZStack {
             Color.black.opacity(0.65).ignoresSafeArea()
 
-            VStack(spacing: 18) {
+            VStack(spacing: isIPad ? 22 : 18) {
                 // Animated icon
                 ZStack {
                     Circle()
@@ -691,42 +727,42 @@ struct MergeNumberGameView: View {
                                 center: .center, startRadius: 20, endRadius: 50
                             )
                         )
-                        .frame(width: 100, height: 100)
+                        .frame(width: isIPad ? 120 : 100, height: isIPad ? 120 : 100)
 
                     Image(systemName: "circle.circle.fill")
-                        .font(.system(size: 52))
+                        .font(.system(size: isIPad ? 64 : 52))
                         .foregroundStyle(
                             LinearGradient(colors: [.orange, .red], startPoint: .top, endPoint: .bottom)
                         )
                 }
 
                 Text("Game Over")
-                    .font(.system(size: 30, weight: .heavy, design: .rounded))
+                    .font(.system(size: isIPad ? 36 : 30, weight: .heavy, design: .rounded))
                     .foregroundColor(.white)
 
-                HStack(spacing: 28) {
+                HStack(spacing: isIPad ? 36 : 28) {
                     VStack(spacing: 4) {
                         Text("\(score)")
-                            .font(.system(size: 26, weight: .bold, design: .rounded))
+                            .font(.system(size: isIPad ? 32 : 26, weight: .bold, design: .rounded))
                             .foregroundColor(.orange)
                         Text("Score")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(.system(size: isIPad ? 13 : 11, weight: .semibold))
                             .foregroundColor(.white.opacity(0.5))
                     }
                     VStack(spacing: 4) {
                         Text("\(highestValue)")
-                            .font(.system(size: 26, weight: .bold, design: .rounded))
+                            .font(.system(size: isIPad ? 32 : 26, weight: .bold, design: .rounded))
                             .foregroundColor(.purple)
                         Text("Highest")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(.system(size: isIPad ? 13 : 11, weight: .semibold))
                             .foregroundColor(.white.opacity(0.5))
                     }
                     VStack(spacing: 4) {
                         Text("\(bestScore)")
-                            .font(.system(size: 26, weight: .bold, design: .rounded))
+                            .font(.system(size: isIPad ? 32 : 26, weight: .bold, design: .rounded))
                             .foregroundColor(.yellow)
                         Text("Best")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(.system(size: isIPad ? 13 : 11, weight: .semibold))
                             .foregroundColor(.white.opacity(0.5))
                     }
                 }
@@ -735,7 +771,7 @@ struct MergeNumberGameView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill").foregroundColor(.yellow)
                         Text("New Best!")
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .font(.system(size: isIPad ? 20 : 16, weight: .bold, design: .rounded))
                             .foregroundColor(.yellow)
                         Image(systemName: "star.fill").foregroundColor(.yellow)
                     }
@@ -747,9 +783,9 @@ struct MergeNumberGameView: View {
                             Image(systemName: "arrow.counterclockwise")
                             Text("Play Again")
                         }
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .font(.system(size: isIPad ? 20 : 18, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
-                        .frame(maxWidth: .infinity).padding(.vertical, 15)
+                        .frame(maxWidth: .infinity).padding(.vertical, isIPad ? 18 : 15)
                         .background(
                             LinearGradient(colors: [.orange, .red], startPoint: .leading, endPoint: .trailing)
                         )
@@ -758,15 +794,16 @@ struct MergeNumberGameView: View {
                     }
                     Button { dismiss() } label: {
                         Text("Back to Games")
-                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .font(.system(size: isIPad ? 18 : 16, weight: .semibold, design: .rounded))
                             .foregroundColor(.white.opacity(0.6))
-                            .frame(maxWidth: .infinity).padding(.vertical, 14)
+                            .frame(maxWidth: .infinity).padding(.vertical, isIPad ? 16 : 14)
                             .background(Color.white.opacity(0.08))
                             .cornerRadius(14)
                     }
                 }
             }
-            .padding(28)
+            .padding(isIPad ? 36 : 28)
+            .frame(maxWidth: isIPad ? 440 : .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 28)
                     .fill(
@@ -781,7 +818,7 @@ struct MergeNumberGameView: View {
                     )
                     .shadow(color: .black.opacity(0.5), radius: 24, y: 12)
             )
-            .padding(.horizontal, 28)
+            .padding(.horizontal, isIPad ? 60 : 28)
         }
     }
 }

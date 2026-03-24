@@ -67,10 +67,10 @@ struct Game2048View: View {
                                 .font(.system(size: 20, weight: .bold))
                                 .foregroundColor(vm.canUndo ? theme.primary : theme.textSecondary.opacity(0.3))
                             Text("UNDO")
-                                .font(.system(size: 10, weight: .bold, design: .rounded))
+                                .font(.system(size: 9, weight: .bold, design: .rounded))
                                 .foregroundColor(vm.canUndo ? theme.primary : theme.textSecondary.opacity(0.3))
                         }
-                        .frame(width: 60)
+                        .frame(width: 65)
                         .padding(.vertical, 10)
                         .background(theme.cardBackground)
                         .cornerRadius(12)
@@ -127,7 +127,9 @@ struct Game2048View: View {
                 )
             }
         }
-        .onAppear { if vm.score == 0 { vm.reset() } }
+        .onAppear {
+            if vm.score == 0 { vm.reset() }
+        }
     }
 
     private func scoreBox(title: String, value: Int) -> some View {
@@ -333,7 +335,7 @@ final class Game2048VM: ObservableObject {
                     let val = row[i] * 2
                     merged.append(val)
                     score += val
-                    if val == 2048 && !won && !continuePlaying { won = true }
+                    if val == 2048 && !won && !continuePlaying { won = true; StreakManager.shared.recordActivity() }
                     i += 2
                 } else {
                     merged.append(row[i])
@@ -368,6 +370,7 @@ final class Game2048VM: ObservableObject {
             }
         }
         gameOver = true
+        StreakManager.shared.recordActivity()
         SoundManager.shared.playGameOver()
         HapticManager.shared.gameOver()
     }
